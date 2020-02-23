@@ -69,10 +69,6 @@ const jump = function (y, x) {
         }
     }, 50);
 
-    hero.y += y * hero.speedMultiplier;
-    hero.element.style.top = hero.y + 'px';
-    hero.x += (x / 2) * hero.speedMultiplier;
-    hero.element.style.left = hero.x + 'px';
 
     if (coordHero.bottom > coordBricks.top &&
         coordHero.left > (coordBricks.left - coordHero.width / 2) &&
@@ -81,24 +77,27 @@ const jump = function (y, x) {
         jumpHeight = coordBricks.top - coordBricks.height;
     }
 
+    hero.y += y * hero.speedMultiplier;
+    hero.element.style.top = hero.y + 'px';
+    hero.x += (x / 2) * hero.speedMultiplier;
+    hero.element.style.left = hero.x + 'px';
+
     setTimeout(() => {
         setInterval(() => {
             if (countDown < 9) {
                 countDown++;
                 hero.element.setAttribute('src', `./img/character-01-jump-0${countDown}.svg`);
             }
-        }, 24);
+        }, 50);
 
         if (jumpHeight) {
-            hero.y = -jumpHeight + 8;
-            console.log(hero.y)
+            hero.y = -jumpHeight + 16;
         } else {
             hero.y = 0;
         }
         hero.element.style.top = hero.y + 'px';
         hero.x += (x / 2) * hero.speedMultiplier;
         hero.element.style.left = hero.x + 'px';
-
     }, 130)
 
 };
@@ -109,22 +108,30 @@ const moveCharacter = (dx) => {
 
     const coordBricks = bricks.getBoundingClientRect();
     const coordHero = hero.element.getBoundingClientRect();
+    const coordField = field.getBoundingClientRect();
 
     if (hero.walkingSkins > 4) {
         hero.walkingSkins = 1;
     }
 
-    if ((coordHero.bottom - 8 < coordBricks.top && ((coordHero.left + coordHero.width / 2) < coordBricks.left))
+    if ((coordHero.bottom - 16 < coordBricks.top && ((coordHero.left + coordHero.width / 2) < coordBricks.left))
         ||
-        ((coordHero.bottom - 8 < coordBricks.top) && (coordHero.left + coordHero.width / 2) > coordBricks.right)) {
+        ((coordHero.bottom - 16 < coordBricks.top) && (coordHero.left + coordHero.width / 2) > coordBricks.right)) {
         hero.element.style.top = 0 + 'px';
     }
 
-    if (coordHero.left < field.getBoundingClientRect().left) {
+    if (coordHero.right > coordField.right) {
+        hero.x = coordField.right-coordHero.width;
+    }
+
+    if (coordHero.left < coordField.left) {
         hero.x = 0
     } else {
         hero.x += dx * hero.speedMultiplier;
     }
+
+
+
     hero.element.style.left = hero.x + 'px';
 
     hero.setSkin(`./img/character-01-walking-0${hero.walkingSkins}.svg`)
@@ -137,20 +144,22 @@ const detectCharacterMovement = () => {
         scale = -1;
         moveCharacter(-10, 0);
     }
-
-    if (keys[keys.right]) {
+    else if (keys[keys.right]) {
         scale = 1;
         moveCharacter(10, 0);
     }
 
+
     if (keys[keys.right] && keys[keys.jump]) {
-        jump(-216, 100)
+        jump(-193, 130)
+    }
+    else if (keys[keys.left] && keys[keys.jump]) {
+        jump(-193, -130)
+    }
+    else if (keys[keys.jump]) {
+        jump(-193, 0)
     }
 
-    if (keys[keys.left] && keys[keys.jump]) {
-
-        jump(-216, -100)
-    }
 
     hero.setScale(scale)
 };
