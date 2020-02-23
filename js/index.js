@@ -55,32 +55,34 @@ const setPressedKeys = function (event) {
 };
 
 const jump = function (y, x) {
+    const coordHero = hero.element.getBoundingClientRect();
+    const coordBricks = bricks.getBoundingClientRect();
 
     let countUp = 1;
     let countDown = 5;
     let jumpHeight = 0;
-    const coordBricks = bricks.getBoundingClientRect();
-    const coordHero = hero.element.getBoundingClientRect();
+
+    if (coordHero.bottom > coordBricks.top &&
+        coordHero.left > (coordBricks.left - coordHero.width / 2) &&
+        coordHero.right < (coordBricks.right + coordHero.width / 2)
+    ) {
+
+        jumpHeight = coordBricks.top - coordBricks.height;
+    }
+
+    hero.y += y * hero.speedMultiplier;
+    hero.element.style.top = hero.y + 'px';
+
+    hero.x += (x / 2) * hero.speedMultiplier;
+    hero.element.style.left = hero.x + 'px';
+
 
     setInterval(() => {
         if (countUp < 5) {
             countUp++;
             hero.element.setAttribute('src', `./img/character-01-jump-0${countUp}.svg`);
         }
-    }, 50);
-
-
-    if (coordHero.bottom > coordBricks.top &&
-        coordHero.left > (coordBricks.left - coordHero.width / 2) &&
-        coordHero.right < (coordBricks.right + coordHero.width / 2)
-    ) {
-        jumpHeight = coordBricks.top - coordBricks.height;
-    }
-
-    hero.y += y * hero.speedMultiplier;
-    hero.element.style.top = hero.y + 'px';
-    hero.x += (x / 2) * hero.speedMultiplier;
-    hero.element.style.left = hero.x + 'px';
+    }, 54);
 
     setTimeout(() => {
         setInterval(() => {
@@ -88,27 +90,29 @@ const jump = function (y, x) {
                 countDown++;
                 hero.element.setAttribute('src', `./img/character-01-jump-0${countDown}.svg`);
             }
-        }, 50);
+        }, 54);
 
         if (jumpHeight) {
-            hero.y = -jumpHeight + 16;
+            hero.y = 16 - jumpHeight;
         } else {
             hero.y = 0;
         }
         hero.element.style.top = hero.y + 'px';
         hero.x += (x / 2) * hero.speedMultiplier;
         hero.element.style.left = hero.x + 'px';
-    }, 130)
+
+    }, 150)
 
 };
 
 
-const moveCharacter = (dx) => {
-    hero.walkingSkins++;
+const moveCharacter = (x) => {
 
-    const coordBricks = bricks.getBoundingClientRect();
     const coordHero = hero.element.getBoundingClientRect();
+    const coordBricks = bricks.getBoundingClientRect();
     const coordField = field.getBoundingClientRect();
+
+    hero.walkingSkins++;
 
     if (hero.walkingSkins > 4) {
         hero.walkingSkins = 1;
@@ -127,10 +131,8 @@ const moveCharacter = (dx) => {
     if (coordHero.left < coordField.left) {
         hero.x = 0
     } else {
-        hero.x += dx * hero.speedMultiplier;
+        hero.x += x * hero.speedMultiplier;
     }
-
-
 
     hero.element.style.left = hero.x + 'px';
 
@@ -149,17 +151,17 @@ const detectCharacterMovement = () => {
         moveCharacter(10, 0);
     }
 
-
     if (keys[keys.right] && keys[keys.jump]) {
         jump(-193, 130)
     }
+
     else if (keys[keys.left] && keys[keys.jump]) {
         jump(-193, -130)
     }
-    else if (keys[keys.jump]) {
-        jump(-193, 0)
-    }
 
+    else if (keys[keys.jump]) {
+        jump(-220, 0)
+    }
 
     hero.setScale(scale)
 };
