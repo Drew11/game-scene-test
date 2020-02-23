@@ -74,14 +74,6 @@ const jump = function (y, x) {
     hero.x += (x / 2) * hero.speedMultiplier;
     hero.element.style.left = hero.x + 'px';
 
-    if (coordHero.bottom > coordBricks.top &&
-        coordHero.left > (coordBricks.left - coordHero.width / 2) &&
-        coordHero.right < (coordBricks.right + coordHero.width / 2)
-    ) {
-
-        jumpHeight = coordBricks.top + 15 - (coordBricks.height*2) ;
-        console.log(jumpHeight);
-    }
 
     setTimeout(() => {
         setInterval(() => {
@@ -91,13 +83,22 @@ const jump = function (y, x) {
             }
         }, 54);
 
+        if (coordHero.bottom > coordBricks.top &&
+            coordHero.left > (coordBricks.left - coordHero.width / 2) &&
+            coordHero.right < (coordBricks.right + coordHero.width / 2)
+        ) {
 
+            jumpHeight = coordBricks.top + 1;
+            console.log(jumpHeight, coordBricks.top);
+        }
 
-        hero.element.style.top = (0 - (jumpHeight)) + 'px';
+        hero.element.style.top =  -jumpHeight/2  + 'px';
         hero.x += (x / 2) * hero.speedMultiplier;
         hero.element.style.left = hero.x + 'px';
 
     }, 148)
+
+
 
 };
 
@@ -108,15 +109,17 @@ const moveCharacter = (x) => {
     const coordBricks = bricks.getBoundingClientRect();
     const coordField = field.getBoundingClientRect();
 
+    console.log(coordBricks.top ,coordHero.bottom )
+
     hero.walkingSkins++;
 
     if (hero.walkingSkins > 4) {
         hero.walkingSkins = 1;
     }
 
-    if ((coordHero.bottom  - 15 < coordBricks.top && ((coordHero.left + coordHero.width / 2) < coordBricks.left))
+    if ((coordHero.top - 1 < coordBricks.top && ((coordHero.left + coordHero.width / 2) < coordBricks.left))
         ||
-        ((coordHero.bottom  - 15 < coordBricks.top) && (coordHero.left + coordHero.width / 2) > coordBricks.right)) {
+        ((coordHero.bottom - 1 < coordBricks.top) && (coordHero.left + coordHero.width / 2) > coordBricks.right)) {
         hero.element.style.top = 0 + 'px';
     }
 
@@ -148,11 +151,11 @@ const detectCharacterMovement = () => {
     }
 
     if (keys[keys.right] && keys[keys.jump]) {
-        jump(-193, 130)
+        jump(-220, 130)
     }
 
     else if (keys[keys.left] && keys[keys.jump]) {
-        jump(-193, -130)
+        jump(-220, -130)
     }
 
     else if (keys[keys.jump]) {
