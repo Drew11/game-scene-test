@@ -55,27 +55,12 @@ const setPressedKeys = function (event) {
 };
 
 const jump = function (y, x) {
+
     const coordHero = hero.element.getBoundingClientRect();
     const coordBricks = bricks.getBoundingClientRect();
-
     let countUp = 1;
     let countDown = 5;
     let jumpHeight = 0;
-
-    if (coordHero.bottom > coordBricks.top &&
-        coordHero.left > (coordBricks.left - coordHero.width / 2) &&
-        coordHero.right < (coordBricks.right + coordHero.width / 2)
-    ) {
-
-        jumpHeight = coordBricks.top - coordBricks.height;
-    }
-
-    hero.y += y * hero.speedMultiplier;
-    hero.element.style.top = hero.y + 'px';
-
-    hero.x += (x / 2) * hero.speedMultiplier;
-    hero.element.style.left = hero.x + 'px';
-
 
     setInterval(() => {
         if (countUp < 5) {
@@ -83,6 +68,20 @@ const jump = function (y, x) {
             hero.element.setAttribute('src', `./img/character-01-jump-0${countUp}.svg`);
         }
     }, 54);
+
+    hero.y = y * hero.speedMultiplier;
+    hero.element.style.top = hero.y + 'px';
+    hero.x += (x / 2) * hero.speedMultiplier;
+    hero.element.style.left = hero.x + 'px';
+
+    if (coordHero.bottom > coordBricks.top &&
+        coordHero.left > (coordBricks.left - coordHero.width / 2) &&
+        coordHero.right < (coordBricks.right + coordHero.width / 2)
+    ) {
+
+        jumpHeight = coordBricks.top + 15 - (coordBricks.height*2) ;
+        console.log(jumpHeight);
+    }
 
     setTimeout(() => {
         setInterval(() => {
@@ -92,16 +91,13 @@ const jump = function (y, x) {
             }
         }, 54);
 
-        if (jumpHeight) {
-            hero.y = 16 - jumpHeight;
-        } else {
-            hero.y = 0;
-        }
-        hero.element.style.top = hero.y + 'px';
+
+
+        hero.element.style.top = (0 - (jumpHeight)) + 'px';
         hero.x += (x / 2) * hero.speedMultiplier;
         hero.element.style.left = hero.x + 'px';
 
-    }, 150)
+    }, 148)
 
 };
 
@@ -118,14 +114,14 @@ const moveCharacter = (x) => {
         hero.walkingSkins = 1;
     }
 
-    if ((coordHero.bottom - 16 < coordBricks.top && ((coordHero.left + coordHero.width / 2) < coordBricks.left))
+    if ((coordHero.bottom  - 15 < coordBricks.top && ((coordHero.left + coordHero.width / 2) < coordBricks.left))
         ||
-        ((coordHero.bottom - 16 < coordBricks.top) && (coordHero.left + coordHero.width / 2) > coordBricks.right)) {
+        ((coordHero.bottom  - 15 < coordBricks.top) && (coordHero.left + coordHero.width / 2) > coordBricks.right)) {
         hero.element.style.top = 0 + 'px';
     }
 
     if (coordHero.right > coordField.right) {
-        hero.x = coordField.right-coordHero.width;
+        hero.x = coordField.right - coordHero.width;
     }
 
     if (coordHero.left < coordField.left) {
