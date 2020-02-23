@@ -1,0 +1,41 @@
+body {
+    display: flex;
+    justify-content: center;
+    background: black;
+    align-items: center;
+
+}
+
+#field {
+    outline: none;
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background: forestgreen;
+
+}
+
+#hero {
+    /*width: 79px;*/
+    height: 139px;
+    position:absolute;
+    margin-top: 322px;
+}
+
+#bricks {
+    width: 300px;
+    height: 30px;
+    background: chocolate;
+    position: absolute;
+    margin-top: 270px;
+    margin-left: 250px;
+    border-radius: 3px;
+}
+
+.floor {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    background: saddlebrown;
+}
